@@ -28,23 +28,27 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 
+// Composable screen that displays a searchable and filterable list of characters.
 @Composable
 fun CharacterListScreen(
     onCharacterClick: (Int) -> Unit
 ) {
+    // ViewModel for character list and loading state.
     val viewModel: CharacterListViewModel = hiltViewModel()
     val characters by viewModel.characters.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
+    // ViewModel for filter state.
     val filterViewModel: FilterViewModel = hiltViewModel()
     val selectedStatus by filterViewModel.selectedStatus.collectAsState()
     val selectedGender by filterViewModel.selectedGender.collectAsState()
     val selectedSpecies by filterViewModel.selectedSpecies.collectAsState()
 
+    // Local state for search query.
     var searchQuery by remember { mutableStateOf("") }
 
-    // Когда меняется текст — вызываем поиск
+    //  Trigger search when query changes.
     LaunchedEffect(searchQuery) {
         if (searchQuery.isNotEmpty()) {
             viewModel.searchCharacters(searchQuery)
@@ -53,7 +57,7 @@ fun CharacterListScreen(
         }
     }
 
-    // 🎛 Когда применяются фильтры
+    // 🎛 Trigger filtering when any filter changes.
     LaunchedEffect(selectedStatus, selectedGender, selectedSpecies) {
         if (selectedStatus != null || selectedGender != null || selectedSpecies != null) {
             viewModel.applyFilters(selectedStatus, selectedGender, selectedSpecies)
@@ -62,7 +66,7 @@ fun CharacterListScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        //  Блок фильтров
+        // Filter dropdowns.
         DropdownFilter(
             selectedStatus = selectedStatus,
             onStatusChange = filterViewModel::onStatusChange,
@@ -72,36 +76,38 @@ fun CharacterListScreen(
             onSpeciesChange = filterViewModel::onSpeciesChange
         )
 
-        //  Поисковое поле
+        // Search input field.
         androidx.compose.material3.OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             label = { Text("Поиск персонажа") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 40.dp)
+                .padding(top = 10.dp)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             singleLine = true
         )
 
-        //  Обновление контента
+        // Swipe-to-refresh wrapper.
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing),
             onRefresh = { viewModel.refresh() }
         ) {
             when {
+                // Loading state.
                 isLoading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
                     }
                 }
-
+                // Empty result state.
                 characters.isEmpty() -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("Ничего не найдено", color = Color.Gray)
                     }
                 }
 
+                // Display character cards in a vertical grid.
                 else -> {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(1),

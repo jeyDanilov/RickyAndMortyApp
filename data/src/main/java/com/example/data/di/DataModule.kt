@@ -1,4 +1,5 @@
 package com.example.data.di
+
 import android.content.Context
 import androidx.room.Room
 import com.example.data.local.AppDatabase
@@ -20,16 +21,19 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+// Hilt module that provides app-wide dependencies scoped to SingletonComponent@Module.
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
 
+    // Binds the implementation of CharacterRepository to its domain interface.
     @Binds
     @Singleton
     abstract fun bindCharacterRepository(impl: CharacterRepositoryImpl): CharacterRepositoryDom
 
     companion object {
 
+        // Provides a Moshi instance with Kotlin support for JSON serialization.
         @Provides
         @Singleton
         fun provideMoshi(): Moshi =
@@ -37,6 +41,7 @@ abstract class DataModule {
                 .add(KotlinJsonAdapterFactory())
                 .build()
 
+        // Provides an OkHttpClient with logging enabled for debugging network requests.
         @Provides
         @Singleton
         fun provideOkHttpClient(): OkHttpClient =
@@ -48,6 +53,7 @@ abstract class DataModule {
                 )
                 .build()
 
+        // Provides a Retrofit instance configured with Moshi and OkHttp for API communication.
         @Provides
         @Singleton
         fun provideRickAndMortyApi(
@@ -62,6 +68,7 @@ abstract class DataModule {
                 .create(RickAndMortyApi::class.java)
         }
 
+        // Provides a Room database instance for local data storage.
         @Provides
         @Singleton
         fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
@@ -71,6 +78,7 @@ abstract class DataModule {
                 "app_database"
             ).build()
 
+        // Provides the DAO for accessing character data from the database.
         @Provides
         fun provideCharacterDao(appDatabase: AppDatabase): CharacterDao =
             appDatabase.characterDao()

@@ -4,6 +4,7 @@ import com.example.data.local.CharacterEntity
 import com.example.data.remote.CharacterDto
 import com.example.domain.model.Character
 
+// Maps a CharacterDto (from API) to a CharacterEntity (for local database).
 fun CharacterDto.toEntity() = CharacterEntity(
     id = id,
     name = name,
@@ -17,6 +18,7 @@ fun CharacterDto.toEntity() = CharacterEntity(
     episodeCount = episode.size
 )
 
+// Maps a CharacterDto (from API) directly to a domain model Character.
 fun CharacterDto.toDomain() = Character(
     id = id,
     name = name,
@@ -30,6 +32,7 @@ fun CharacterDto.toDomain() = Character(
     episodeCount = episode.size
 )
 
+// Maps a CharacterEntity (from database) to a domain model Character.
 fun CharacterEntity.toDomain() = Character(
     id = id,
     name = name,

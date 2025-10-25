@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// ViewModel for managing character list, search, filters, and refresh logic.
 @HiltViewModel
 class CharacterListViewModel @Inject constructor(
     private val repository: CharacterRepositoryDom,
@@ -22,34 +23,40 @@ class CharacterListViewModel @Inject constructor(
 
 ) : ViewModel() {
 
+    // Holds the current list of characters.
     private val _characters = MutableStateFlow<List<Character>>(emptyList())
     val characters: StateFlow<List<Character>> = _characters
 
+    // Loading indicator for initial or filtered fetch.
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    // Refresh indicator for swipe-to-refresh.
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
+    // Initial load when ViewModel is created.
     init {
         loadCharacters()
     }
 
+    // Public method to trigger manual refresh.
     fun refresh() {
         loadCharacters(refresh = true)
     }
 
+    // Loads characters from local DB, optionally refreshing from API.
     private fun loadCharacters(refresh: Boolean = false) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // Если первый запуск или юзер обновляет вручную
+                // Refresh from API if needed (only if using CharacterRepositoryImpl).
                 if (repository is CharacterRepositoryImpl && (refresh || _characters.value.isEmpty())) {
                     (repository.refreshFromApi())
                 }
-                // Теперь загружаем из Room (офлайн)
+                // Load from Room (offline cache)
                 val list = repository.getCharacters().first()
-                    _characters.value = list
+                _characters.value = list
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -59,6 +66,7 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
+    // Searches characters by name using use case.
     fun searchCharacters(query: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -68,6 +76,7 @@ class CharacterListViewModel @Inject constructor(
         }
     }
 
+    // Applies filters using use case.
     fun applyFilters(status: String?, gender: String?, species: String?) {
         viewModelScope.launch {
             _isLoading.value = true

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 
+// Composable that displays a character card with image, name, species, and status.
 @Composable
 fun CharacterCard(
     name: String,
@@ -26,12 +27,14 @@ fun CharacterCard(
     species: String,
     onClick: () -> Unit,
 ) {
+    // Status-based color indicator.
     val statusColor = when (status.lowercase()) {
         "alive" -> Color(0xFF4CAF50)
         "dead" -> Color(0xFFF44336)
         else -> Color(0xFF9E9E9E)
     }
 
+    // Card container with styling and click behavior.
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,12 +44,14 @@ fun CharacterCard(
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2E2E3F)),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
+        // Horizontal layout for image and text.
         Row(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Character image with border based on status.
             AsyncImage(
                 model = imageUrl,
                 contentDescription = null,
@@ -57,6 +62,7 @@ fun CharacterCard(
                     .border(2.dp, statusColor, RoundedCornerShape(12.dp))
             )
             Spacer(modifier = Modifier.width(16.dp))
+            // Character details.
             Column {
                 Text(text = name, style = MaterialTheme.typography.titleMedium, color = Color.White)
                 Text(

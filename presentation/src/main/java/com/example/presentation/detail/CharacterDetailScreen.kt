@@ -29,15 +29,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 
+// Composable screen that displays detailed info about a character.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterDetailScreen(
     characterId: Int,
     navController: NavHostController
 ) {
+    // Injects the ViewModel using Hilt.
     val viewModel: CharacterDetailViewModel = hiltViewModel()
+    // Observes the character state from the ViewModel.
     val character by viewModel.character.collectAsState()
 
+    // Scaffold layout with a top app bar.
     Scaffold(
         topBar = {
             TopAppBar(
@@ -50,12 +54,14 @@ fun CharacterDetailScreen(
             )
         }
     ) { padding ->
+        // If character is loaded, show details.
         character?.let {
             Column(modifier = Modifier
                 .padding(padding)
                 .padding(16.dp)
                 .fillMaxSize()
             ) {
+                // Character image.
                 AsyncImage(
                     model = it.image,
                     contentDescription = null,
@@ -65,6 +71,7 @@ fun CharacterDetailScreen(
                         .clip(RoundedCornerShape(16.dp))
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+                // Character attributes.
                 Text("Имя: ${it.name}", style = MaterialTheme.typography.titleLarge)
                 Text("Статус: ${it.status}", style = MaterialTheme.typography.bodyMedium)
                 Text("Вид: ${it.species}", style = MaterialTheme.typography.bodyMedium)
@@ -74,6 +81,7 @@ fun CharacterDetailScreen(
                 Text("Эпизодов: ${it.episodeCount}", style = MaterialTheme.typography.bodyMedium)
             }
         } ?: Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            // Loading indicator while character is null.
             CircularProgressIndicator()
         }
     }

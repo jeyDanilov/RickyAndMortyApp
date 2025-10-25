@@ -11,17 +11,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+// Concrete implementation of the domain repository interface using API and local DAO.
 class CharacterRepositoryImpl @Inject constructor(
     private val api: RickAndMortyApi,
     private val dao: CharacterDao
 ) : CharacterRepositoryDom {
 
+    // Returns all characters from local database as a reactive Flow.
     override fun getCharacters(): Flow<List<Character>> =
         dao.getAll().map { list -> list.map { it.toDomain() } }
 
+    // Retrieves a single character by ID from local database.
     override suspend fun getCharacterById(id: Int): Character? =
         dao.getById(id)?.toDomain()
 
+    // Searches characters by name in local database.
     override suspend fun searchCharacters(query: String): List<Character> {
         return try {
             dao.searchByName(query).map { it.toDomain() }
@@ -30,6 +34,7 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
+    // Fetches filtered characters from API, caches them, or falls back to local DB on failure.
     override suspend fun getCharactersDirectlyFiltered(
         status: String?,
         gender: String?,
@@ -47,6 +52,7 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
+    // Refreshes local database with latest characters from API.
     suspend fun refreshFromApi() {
         try {
 

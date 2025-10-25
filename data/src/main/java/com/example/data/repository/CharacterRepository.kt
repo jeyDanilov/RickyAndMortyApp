@@ -10,11 +10,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-
+// Repository that handles data operations from both API and local database.
 class CharacterRepository @Inject constructor(
     private val api: RickAndMortyApi,
     private val dao: CharacterDao
 ) {
+    // Loads characters from API, caches them locally, and emits the result as a Flow.
     suspend fun getCharacters(): Flow<List<Character>> = flow {
         try {
             val response = api.getCharacters()
@@ -26,7 +27,13 @@ class CharacterRepository @Inject constructor(
             emit(dao.getAll().first().map { it.toDomain() })
         }
     }
-    suspend fun getFilteredCharacters(status: String?, gender: String?, species: String?): List<Character> {
+
+    // Loads filtered characters directly from API and maps them to domain models.
+    suspend fun getFilteredCharacters(
+        status: String?,
+        gender: String?,
+        species: String?
+    ): List<Character> {
         return try {
             val response = api.getFilteredCharacters(status, gender, species)
             val entities = response.results.map { it.toEntity() }

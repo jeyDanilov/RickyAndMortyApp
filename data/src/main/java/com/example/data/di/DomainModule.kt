@@ -9,10 +9,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+// Hilt module for providing domain-layer use cases.
 @Module
 @InstallIn(SingletonComponent::class)
 object DomainModule {
 
+    // Provides a use case for filtering characters using the domain repository.
     @Provides
     @Singleton
     fun provideFilterCharactersUseCase(

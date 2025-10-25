@@ -10,12 +10,14 @@ import com.example.presentation.detail.CharacterDetailScreen
 import com.example.presentation.list.CharacterListScreen
 
 
+// Defines the navigation graph for the app using Jetpack Compose Navigation.
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = "characterList"
     ) {
+        // Route for character list screen.
         composable("characterList") {
             CharacterListScreen(
                 onCharacterClick = { id ->
@@ -23,6 +25,7 @@ fun AppNavGraph(navController: NavHostController) {
                 }
             )
         }
+        // Route for character detail screen with ID argument.
         composable(
             route = "characterDetail/{id}",
             arguments = listOf(navArgument("id") { type = NavType.IntType })

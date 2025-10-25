@@ -1,5 +1,6 @@
 package com.example.data.remote
 
+// Data Transfer Object representing a character from the Rick and Morty API.
 data class CharacterDto(
     val id: Int,
     val name: String,
@@ -13,9 +14,10 @@ data class CharacterDto(
     val episode: List<String>
 )
 
+// DTO for origin location (nested inside CharacterDto).
 data class originDto(val name: String, val url: String)
 
-
+// DTO for current location (nested inside CharacterDto).
 data class locationDto(val name: String, val url: String)
 
 

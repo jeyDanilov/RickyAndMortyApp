@@ -1,6 +1,6 @@
 package com.example.domain.model
 
-
+// Domain model representing a character used across the app (UI, use cases, etc.).
 data class Character(
     val id: Int,
     val name: String,
