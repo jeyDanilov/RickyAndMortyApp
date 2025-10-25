@@ -18,7 +18,7 @@ The app displays characters from the Rick and Morty universe, with the ability t
 - Architecture Clean Architecture + MVVM - Navigation via Navigation Compose
 
 
-**Project architecture **│
+**Project architecture **
 
 ├── data // Data sources (Room, Retrofit, DTO, Repository)
 │ ├── local // Room DAO and Entity
