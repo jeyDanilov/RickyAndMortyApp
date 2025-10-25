@@ -20,24 +20,21 @@ The app displays characters from the Rick and Morty universe, with the ability t
 
 **Project architecture **
 
-├── data // Data sources (Room, Retrofit, DTO, Repository)
-|
-│ ├── local // Room DAO and Entity
-│ ├── remote // Retrofit API and model responce
-│ └── repository // Implementation of repository interfaces
-│
-|
-├── domain // Use Cases, Entities, repository interfaces
-│ ├── model
-│ ├── repository
-│ └── usecase
-│
-|
-├── presentation // ViewModel and UI on Jetpack Compose
-│ ├── list // Screen with the list of characters
-│ ├── detail // Character details screen
-│ ├── filter //UI and filtering logic
-│ └── navigation // navigation betwen screens
-│
-|
-└── di // Module for Hilt (DataModule, NetworkModule and etc)
+*data* // Data sources (Room, Retrofit, DTO, Repository)
+- local // Room DAO and Entity
+- remote // Retrofit API and model responce
+- repository // Implementation of repository interfaces
+- di // Module for Hilt (DataModule,DomainModule)
+
+*domain* // Use Cases, Entities, repository interfaces
+- model
+- repository
+- usecase
+
+
+*presentation* // ViewModel and UI on Jetpack Compose
+- list // Screen with the list of characters
+- detail // Character details screen
+- filter //UI and filtering logic
+- navigation // navigation betwen screens
+
