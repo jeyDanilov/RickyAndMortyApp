@@ -1,4 +1,4 @@
-# RickyAndMprtyApp
+# RickyAndMortyApp
 
 An Android app created as part of a test assignment.
 
